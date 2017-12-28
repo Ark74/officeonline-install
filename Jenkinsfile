@@ -1,7 +1,7 @@
 pipeline {
   agent any
   stages {
-    stage('Debian build') {
+    stage('OS builds') {
       parallel {
         stage('Debian build') {
           steps {
@@ -11,9 +11,9 @@ pipeline {
 set -e
 find . -type f -name \'*.sh\' -exec shellcheck {} \\;'''
               }
-
+              
             }
-
+            
           }
         }
         stage('Ubuntu build') {
@@ -24,9 +24,9 @@ find . -type f -name \'*.sh\' -exec shellcheck {} \\;'''
 set -e
 find . -type f -name \'*.sh\' -exec shellcheck {} \\;'''
               }
-
+              
             }
-
+            
           }
         }
       }
