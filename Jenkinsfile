@@ -8,6 +8,9 @@ pipeline {
         }
         
       }
+      environment {
+        SHELLCHECK_OPTS = '-e SC2086 -e SC2001'
+      }
       steps {
         sh '''#!/bin/bash
 set -xe
@@ -46,7 +49,7 @@ find $WORKSPACE -type f -name \'*.sh\''''
         }
       }
     }
-    stage('') {
+    stage('Clean') {
       steps {
         cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenUnstable: true, cleanupMatrixParent: true, deleteDirs: true)
       }
