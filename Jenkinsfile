@@ -10,8 +10,8 @@ pipeline {
       }
       steps {
         sh '''#!/bin/bash;
-set -e;
-find . -type f -name \'*.sh\' -exec shellcheck {} \\;'''
+set -xe;
+for myscript in $(find $WORKSPACE -type f -not -path "*@tmp*" -name \'*.sh\'); do shellcheck $myscript ; done'''
       }
     }
     stage('Builds') {
@@ -26,7 +26,7 @@ find . -type f -name \'*.sh\' -exec shellcheck {} \\;'''
           steps {
             sh '''#!/bin/bash;
 set -e;
-find . -type f -name \'*.sh\' -exec shellcheck {} \\;'''
+find $WORKSPACE -type f -name \'*.sh\''''
           }
         }
         stage('Ubuntu') {
@@ -39,7 +39,7 @@ find . -type f -name \'*.sh\' -exec shellcheck {} \\;'''
           steps {
             sh '''#!/bin/bash;
 set -e;
-find . -type f -name \'*.sh\' -exec shellcheck {} \\;'''
+find $WORKSPACE -type f -name \'*.sh\''''
           }
         }
       }
