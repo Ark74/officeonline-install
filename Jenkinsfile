@@ -9,7 +9,7 @@ pipeline {
         
       }
       environment {
-        SHELLCHECK_OPTS = '-e SC2086 -e SC2001 -e SC2006 -e SC2126 -e SC2116'
+        SHELLCHECK_OPTS = '-x -e SC2086 -e SC2001 -e SC2006 -e SC2126 -e SC2116 -e SC2034'
       }
       steps {
         sh '''#!/bin/bash
