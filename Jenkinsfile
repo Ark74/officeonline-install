@@ -6,9 +6,12 @@ pipeline {
         stage('Debian build') {
           steps {
             node(label: 'debian') {
-              sh '''#!/bin/bash;
+              ws(dir: '/tmp/') {
+                sh '''#!/bin/bash;
 set -e;
 find . -type f -name \'*.sh\' -exec shellcheck {} \\;'''
+              }
+              
             }
             
           }
