@@ -1,29 +1,45 @@
 pipeline {
   agent any
   stages {
-    stage('OS builds') {
-      parallel {
-        stage('Debian build') {
-          steps {
-            node(label: 'debian') {
-              ws(dir: '/tmp/') {
-                sh '''#!/bin/bash;
+    stage('Script checks') {
+      agent {
+        node {
+          label 'debian'
+        }
+        
+      }
+      steps {
+        sh '''#!/bin/bash;
 set -e;
 find . -type f -name \'*.sh\' -exec shellcheck {} \\;'''
-              }
-              
+      }
+    }
+    stage('Builds') {
+      parallel {
+        stage('Debian') {
+          agent {
+            node {
+              label 'debian'
             }
             
           }
-        }
-        stage('Ubuntu build') {
           steps {
-            node(label: 'ubuntu') {
-              sh '''#!/bin/bash;
+            sh '''#!/bin/bash;
 set -e;
 find . -type f -name \'*.sh\' -exec shellcheck {} \\;'''
+          }
+        }
+        stage('Ubuntu') {
+          agent {
+            node {
+              label 'ubuntu'
             }
             
+          }
+          steps {
+            sh '''#!/bin/bash;
+set -e;
+find . -type f -name \'*.sh\' -exec shellcheck {} \\;'''
           }
         }
       }
