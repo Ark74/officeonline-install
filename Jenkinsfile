@@ -9,9 +9,11 @@ pipeline {
         
       }
       steps {
-        sh '''#!/bin/bash;
-set -xe;
-for myscript in $(find $WORKSPACE -type f -not -path "*@tmp*" -name \'*.sh\'); do shellcheck $myscript ; done'''
+        sh '''#!/bin/bash
+set -xe
+for myscript in $(find $WORKSPACE -type f -not -path "*@tmp*" -name \'*.sh\'); do
+shellcheck $myscript
+ done'''
       }
     }
     stage('Builds') {
@@ -42,6 +44,11 @@ set -e;
 find $WORKSPACE -type f -name \'*.sh\''''
           }
         }
+      }
+    }
+    stage('') {
+      steps {
+        cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenUnstable: true, cleanupMatrixParent: true, deleteDirs: true)
       }
     }
   }
