@@ -12,7 +12,7 @@
 #or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 #You should have received a copy of the GNU General Public License along with
 #this program. If not, see http://www.gnu.org/licenses/.
-# shellcheck disable=SC2154
+# shellcheck disable=SC2154,SC1090,SC1091
 whendiditstopped() {
   echo "Ended at $(date +'%Y-%m-%d %H:%M:%S')" >> "${log_dir}"/timewatch.log
 }

@@ -10,17 +10,17 @@ SearchGitOpts=''
 [ -n "${lo_src_commit}" ] && SearchGitOpts="${SearchGitOpts} -c ${lo_src_commit}"
 [ -n "${lo_src_tag}" ] && SearchGitOpts="${SearchGitOpts} -t ${lo_src_tag}"
 #### Download dependencies ####
-if [ -d ${lo_dir} ]; then
-  cd ${lo_dir}
+if [ -d "${lo_dir}" ]; then
+  cd "${lo_dir}"
 else
   echo "Cloning Libre Office core (this might take a while) ..."
-  git clone ${lo_src_repo} ${lo_dir}
-  cd ${lo_dir}
+  git clone "${lo_src_repo}" "${lo_dir}"
+  cd "${lo_dir}"
 fi
 declare repChanged
-eval "$(SearchGitCommit $SearchGitOpts)"
-if [ -d ${lo_dir}/instdir ] && $repChanged ; then
+eval "$(SearchGitCommit "$SearchGitOpts")"
+if [ -d "${lo_dir}"/instdir ] && "$repChanged" ; then
   lo_forcebuild=true
 fi
-chown -R lool:lool ${lo_dir}
+chown -R lool:lool "${lo_dir}"
 set +e

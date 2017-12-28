@@ -5,7 +5,7 @@
 echo "Verifying System Requirements:"
 ### Test RAM size (4GB min) ###
 mem_available=$(grep MemTotal /proc/meminfo| grep -o '[0-9]\+')
-if [ ${mem_available} -lt 3700000 ]; then
+if [ "${mem_available}" -lt 3700000 ]; then
   echo "Error: The system do not meet the minimum requirements." >&2
   echo "Error: 4GB RAM required!" >&2
   exit 1
@@ -21,7 +21,7 @@ lool_fs=$(getFilesystem "$(dirname "$lool_dir")") || exit 1
 #here we use an array to store a relative number of FS and their respective required volume
 #if, like in the default, LO, poco & LOOL are all stored on the same FS, the value add-up
 declare -A mountPointArray # declare associative array
-if [ ! -d ${lo_dir}/instdir ] ; then
+if [ ! -d "${lo_dir}"/instdir ] ; then
   mountPointArray["$lo_fs"]=$((mountPointArray["$lo_fs"]+lo_req_vol))
 fi
 if [ ! -d "${poco_dir}" ] || [ "$(du -s "${poco_dir}" | awk '{print $1}' 2>/dev/null)" -lt 100000 ]; then
@@ -32,9 +32,9 @@ if [ ! -f "${lool_dir}"/loolwsd ]; then
 fi
 # test if each file system used have the required space.
 # if there's nothing to (force-)build (so 0 FS to verify), the script leave here.
-if [ ${#mountPointArray[@]} -ne 0 ]; then
+if [ "${#mountPointArray[@]}" -ne 0 ]; then
   for fs_item in "${!mountPointArray[@]}"; do
-    fs_item_avail=$(checkAvailableSpace $fs_item ${mountPointArray["$fs_item"]}) || exit 1
+    fs_item_avail=$(checkAvailableSpace "$fs_item" "${mountPointArray["$fs_item"]}") || exit 1
     echo "${fs_item}: PASSED (${mountPointArray["$fs_item"]} MiB Req., ${fs_item_avail} MiB avail.)"
   done
 fi

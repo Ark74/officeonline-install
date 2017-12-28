@@ -21,7 +21,7 @@ DistribFile(){
   local action="$1"; shift
   while [ $# -ne 0 ]; do
     IFS=','
-    myargs=($1)
+    mapfile -t myargs <<<"$1"
     IFS=" "
     for myarg in ${myargs[@]}; do
       # remove optionnal '--' in front of option name
@@ -47,7 +47,7 @@ DistribFile(){
         # remove opposite options from the distribution:
         # if option disable-something, remove previous option enable-something and vice versa
         # latest option win
-        case "$(cut -d '-' -f1 <<<$parameter )" in
+        case "$(cut -d '-' -f1 <<<"$parameter" )" in
           disable) DistribFile.Remove "$DistribFile" "${parameter//disable/enable}";;
           enable) DistribFile.Remove "$DistribFile" "${parameter//enable/disable}";;
           without) DistribFile.Remove "$DistribFile" "${parameter//without/with}";;
@@ -65,7 +65,7 @@ DistribFile(){
 
 
 DistribFile.Append() {
-  if ! egrep -q "${2}"$ "$1"; then
+  if ! grep -Eq "${2}"$ "$1"; then
     echo "--$2" | awk '{print "$1"}' >> "$1"
   fi
 }
