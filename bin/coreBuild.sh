@@ -16,7 +16,8 @@ SO BE PATIENT PLEASE! ! You may see errors during the installation, just ignore 
   cd "${lo_dir}" || exit
   DistribFile clear
   DistribFile append "$lo_configure_opts"
-  # shellcheck disable=SC2086 # TODO: convert build options into an array
+  # shellcheck disable=SC2086
+  # TODO: convert build options into an array
   ${lo_mini} && DistribFile append $lo_mini_opts
   ${lo_forcebuild} && [ -f "${lo_dir}"/configure ] && make clean
   if ! sudo -Hu lool ./autogen.sh --with-distro="$distrib_name"; then exit 2; fi
