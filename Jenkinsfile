@@ -29,9 +29,10 @@ shellcheck $myscript
             
           }
           steps {
-            sh '''#!/bin/bash;
-set -e;
-find $WORKSPACE -type f -name \'*.sh\''''
+            sh '''#!/bin/bash
+set -e
+find $WORKSPACE -type f -name \'*.sh\'
+'''
           }
         }
         stage('Ubuntu') {
@@ -42,9 +43,10 @@ find $WORKSPACE -type f -name \'*.sh\''''
             
           }
           steps {
-            sh '''#!/bin/bash;
-set -e;
-find $WORKSPACE -type f -name \'*.sh\''''
+            sh '''#!/bin/bash
+set -e
+find $WORKSPACE -type f -name \'*.sh\'
+'''
           }
         }
       }
