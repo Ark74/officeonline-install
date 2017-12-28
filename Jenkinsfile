@@ -30,8 +30,7 @@ shellcheck $myscript
           }
           steps {
             sh '''#!/bin/bash
-set -e
-find $WORKSPACE -type f -name \'*.sh\'
+sudo ./officeonline-install.sh -c sh_interactive=false
 '''
           }
         }
@@ -44,8 +43,7 @@ find $WORKSPACE -type f -name \'*.sh\'
           }
           steps {
             sh '''#!/bin/bash
-set -e
-find $WORKSPACE -type f -name \'*.sh\'
+sudo ./officeonline-install.sh -c sh_interactive=false
 '''
           }
         }
