@@ -5,10 +5,10 @@
 ## Installation of requirements for Libreoffice build only
 ## Download & install LibreOffice Sources
 set -e
-SearchGitOpts=''
-[ -n "${lo_src_branch}" ] && SearchGitOpts="${SearchGitOpts} -b ${lo_src_branch}"
-[ -n "${lo_src_commit}" ] && SearchGitOpts="${SearchGitOpts} -c ${lo_src_commit}"
-[ -n "${lo_src_tag}" ] && SearchGitOpts="${SearchGitOpts} -t ${lo_src_tag}"
+SearchGitOpts=()
+[ -n "${lo_src_branch}" ] && SearchGitOpts+=("-b" "${lo_src_branch}")
+[ -n "${lo_src_commit}" ] && SearchGitOpts+=("-c" "${lo_src_commit}")
+[ -n "${lo_src_tag}" ] && SearchGitOpts+=("-t" "${lo_src_tag}")
 #### Download dependencies ####
 if [ -d "${lo_dir}" ]; then
   cd "${lo_dir}"
@@ -18,7 +18,7 @@ else
   cd "${lo_dir}"
 fi
 declare repChanged
-eval "$(SearchGitCommit "$SearchGitOpts")"
+eval "$(SearchGitCommit "${SearchGitOpts[@]}")"
 if [ -d "${lo_dir}"/instdir ] && "$repChanged" ; then
   lo_forcebuild=true
 fi
