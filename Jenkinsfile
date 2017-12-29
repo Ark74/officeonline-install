@@ -27,8 +27,7 @@ shellcheck $myscript
           agent any
           steps {
             sh '''#!/bin/bash
-set -vx
-sudo ./officeonline-install.sh -c sh_interactive=false
+sudo bash -vx ./officeonline-install.sh -c sh_interactive=false
 '''
           }
         }
@@ -41,8 +40,7 @@ sudo ./officeonline-install.sh -c sh_interactive=false
           }
           steps {
             sh '''#!/bin/bash
-set -vx
-sudo ./officeonline-install.sh -c sh_interactive=false
+sudo bash -vx ./officeonline-install.sh -c sh_interactive=false
 '''
           }
         }
