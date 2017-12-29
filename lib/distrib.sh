@@ -53,7 +53,7 @@ DistribFile(){
           without) DistribFile.Remove "$DistribFile" "${parameter//without/with}";;
           with) DistribFile.Remove "$DistribFile" "${parameter//with/without}";;
         esac
-          DistribFile.Append "$DistribFile" "$paramete"r
+          DistribFile.Append "$DistribFile" "$parameter"
       done; IFS=" ";;
     remove) IFS=","; for parameter in $buildOpts; do
         DistribFile.Remove "$DistribFile" "$parameter"
@@ -66,7 +66,7 @@ DistribFile(){
 
 DistribFile.Append() {
   if ! grep -Eq "${2}"$ "$1"; then
-    echo "--$2" | awk '{print "$1"}' >> "$1"
+    echo "--$2" | awk '{print $1}' >> "$1"
   fi
 }
 
