@@ -7,7 +7,12 @@ pipeline {
   }
   stages {
     stage('Script checks') {
-      agent any
+      agent {
+        node {
+          label 'debian'
+        }
+        
+      }
       steps {
         sh '''#!/bin/bash
 set -xe
