@@ -131,36 +131,38 @@ FindOnlineSet() {
   # $6 a desired common version for the set. (latest possible if let unused)
   local set_name="$1" core_repo="$2" core_regex="$3" online_repo="$4" online_regex="$5" set_ver core_avail online_avail
   [ -n "$6" ] && set_ver=$(tr '-' '.' <<<"$6")
-  core_avail=$(git ls-remote --heads "$core_repo" "*$set_name*"|awk '{print $2}'|sed 's/refs\/heads\///g'|grep -E "$core_regex")
-  online_avail=$(git ls-remote --heads "$online_repo" "*$set_name*"|awk '{print $2}'|sed 's/refs\/heads\///g'|grep -E "$online_regex")
-  [[ (-z "$core_avail") || (-z "$online_avail") ]] && echo "No set found for $set_name">&2 && return 1
-  if [[ ($(wc -w <<<"$core_avail") -eq 1) && ($(wc -w <<< "$online_avail") -eq 1) ]]; then
-    echo "$core_avail $online_avail"
+  mapfile -t core_avail < <(git ls-remote --heads "$core_repo" "*$set_name*"|awk '{print $2}'|sed 's/refs\/heads\///g'|grep -E "$core_regex")
+  mapfile -t online_avail < <(git ls-remote --heads "$online_repo" "*$set_name*"|awk '{print $2}'|sed 's/refs\/heads\///g'|grep -E "$online_regex")
+  [[ ("${#core_avail[@]}" -eq 0) || ("${#online_avail[@]}" -eq 0) ]] && echo "No set found for $set_name">&2 && return 1
+  if [[ ("${#core_avail[@]}" -eq 1) && ("${#online_avail[@]}" -eq 1) ]]; then
+    echo "${core_avail[0]} ${online_avail[0]}"
     return 0
   fi
   if [ -n "$set_ver" ]; then
     FindSetVersion() {
       # nested function for searching a common version number
+      # $1 is the search version number
       # $@ is a list for branch name
+      local myversion="$1"
+      shift
       local interview
-      local ver_branch_set
+      local ver_branch_set=()
       for candidate in "$@"; do
-        interview=$(tr '-' '.' <<<"$candidate" | grep "$set_ver")
-        [ -n "$interview" ] && ver_branch_set="$ver_branch_set $candidate"
-          # if more than one match (sub version), rely on git sorting the version to get the latest available
-          awk '{print $NF}' <<<"$ver_branch_set"
+        mapfile -t interview < <(tr '-' '.' <<<"$candidate" | grep "$myversion")
+        [ "${#interview[@]}" -ne 0 ] && ver_branch_set+=("$candidate")
       done
+      # if more than one match (sub version), rely on git sorting the version to get the latest available
+      echo "${ver_branch_set[-1]}"
     }
-    core_avail=$(FindSetVersion "$core_avail")
-    online_avail=$(FindSetVersion "$online_avail")
-    if [[ ( -z "$core_avail" ) || ( -z "$online_avail" ) ]]; then
+    mapfile -t core_avail < <(FindSetVersion "$set_ver" "${core_avail[@]}")
+    mapfile -t online_avail < <(FindSetVersion "$set_ver" "${online_avail[@]}")
+    if [[ ("${#core_avail[@]}" -eq 0 ) || ("${#online_avail[@]}" -eq 0) ]]; then
       echo "Unable to find a proper set for $set_name at version $set_ver." >&2
       return 2
     fi
   fi
     # if more than one match, rely on git sorting the version to get the latest available
     # /!\ limited results when to much branches
-    awk '{print $NF}' <<<"$core_avail"
-    awk '{print $NF}' <<<"$online_avail"
+    echo "${core_avail[-1]}" "${online_avail[-1]}"
     return 0
 }
