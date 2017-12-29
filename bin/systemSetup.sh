@@ -51,20 +51,20 @@ DIST=$(lsb_release -si)
 CODENAME=$(lsb_release -c)
 CODENAME="${CODENAME##*:}"
 
-DIST_PKGS=""
+DIST_PKGS=()
 if [ "${DIST}" = "Ubuntu" ]; then
-  DIST_PKGS="${DIST_PKGS} openjdk-8-jdk"
+  DIST_PKGS+=("openjdk-8-jdk")
 fi
 if [ "${DIST}" = "Debian" ]; then
   if [ "${CODENAME}" = "stretch" ];then
     ssl_fix_dirty
-    DIST_PKGS="${DIST_PKGS} openjdk-8-jdk"
-    DIST_PKGS="${DIST_PKGS} libpng16.16"
-    DIST_PKGS="${DIST_PKGS} libpng-dev"
+    DIST_PKGS+=("openjdk-8-jdk")
+    DIST_PKGS+=("libpng16.16")
+    DIST_PKGS+=("libpng-dev")
   else
-    DIST_PKGS="${DIST_PKGS} openjdk-7-jdk"
-    DIST_PKGS="${DIST_PKGS} libpng12-0"
-    DIST_PKGS="${DIST_PKGS} libpng12-dev"
+    DIST_PKGS+=("openjdk-7-jdk")
+    DIST_PKGS+=("libpng12-0")
+    DIST_PKGS+=("libpng12-dev")
   fi
 fi
 
@@ -74,7 +74,7 @@ libcppunit-doc libcunit1 libcunit1-dev libegl1-mesa-dev libfontconfig1-dev libgl
 libgtk-3-dev libgtk2.0-dev libkrb5-dev libpcap0.8 libpcap0.8-dev libtool \
 libxml2-utils libxrandr-dev libxrender-dev libxslt1-dev libxt-dev m4 nasm openssl libssl-dev \
 pkg-config python-dev python-polib python3-dev uuid-runtime xsltproc libcap2-bin python-lxml \
-  "${DIST_PKGS}" -y; then
+  "${DIST_PKGS[@]}" -y; then
     exit 1
 fi
 if ! ${lo_mini}; then
