@@ -43,29 +43,25 @@ ${sh_interactive} && apt-get install dialog -y
 grep -q '# deb-src' "${soli}" && sed -i 's/# deb-src/deb-src/g' "${soli}" && apt-get update
 
 # Need to checkout Distrib/Release
-apt-get install lsb-release -y
-
-DIST=$(lsb_release -si)
-# RELEASE=`lsb_release -sr`
-
-CODENAME=$(lsb_release -c)
-CODENAME="${CODENAME##*:}"
+# shellcheck disable=SC2154,SC1090,SC1091
+source /etc/os-release
+DIST=$(ID)
 
 DIST_PKGS=()
-if [ "${DIST}" = "Ubuntu" ]; then
+if [ "${DIST}" = "ubuntu" ]; then
   DIST_PKGS+=("openjdk-8-jdk")
-fi
-if [ "${DIST}" = "Debian" ]; then
-  if [ "${CODENAME}" = "stretch" ];then
+elif [ "${DIST}" = "debian" ]; then
+  case "${VERSION_ID}" in
+    "9")
     ssl_fix_dirty
     DIST_PKGS+=("openjdk-8-jdk")
     DIST_PKGS+=("libpng16.16")
-    DIST_PKGS+=("libpng-dev")
-  else
+    DIST_PKGS+=("libpng-dev");;
+    "8")
     DIST_PKGS+=("openjdk-7-jdk")
     DIST_PKGS+=("libpng12-0")
-    DIST_PKGS+=("libpng12-dev")
-  fi
+    DIST_PKGS+=("libpng12-dev");;
+  esac
 fi
 
 if ! apt-get install ant sudo systemd wget zip make procps automake bison ccache \
